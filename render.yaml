@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: zimple-cumplehub-frontend
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://zimple-cumplehub-api.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  - type: web
+    name: zimple-cumplehub-api
+    runtime: node
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: zimple-cumplehub-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: zimple-cumplehub-redis
+          property: connectionString
+
+  - type: redis
+    name: zimple-cumplehub-redis
+    ipAllowList: []
+
+databases:
+  - name: zimple-cumplehub-db
+    databaseName: cumplehub
+    user: zimple
+    plan: free
