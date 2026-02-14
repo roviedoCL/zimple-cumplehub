@@ -33,6 +33,8 @@ COPY --from=frontend-build /app/frontend/dist ./frontend/dist
 # Variables de entorno
 ENV NODE_ENV=production
 ENV PORT=3000
+# Default ENCRYPTION_KEY for Railway (should be overridden by Railway variables)
+ENV ENCRYPTION_KEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
 
 EXPOSE 3000
 
