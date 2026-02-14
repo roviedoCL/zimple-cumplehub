@@ -1,4 +1,5 @@
 # Multi-stage build para producción
+# Force rebuild: Sat Feb 14 15:15:00 UTC 2026
 # Stage 1: Build del frontend
 FROM node:20-alpine AS frontend-build
 WORKDIR /app/frontend
