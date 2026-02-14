@@ -4,12 +4,14 @@ import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
 import compression from 'compression';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './core/filters/global-exception.filter';
 import { LoggerService } from './infrastructure/logger/logger.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs: true,
   });
 
@@ -100,6 +102,23 @@ async function bootstrap() {
     },
   });
 
+  // Serve static files (frontend)
+  const frontendPath = join(__dirname, '..', 'frontend', 'dist');
+  app.useStaticAssets(frontendPath);
+  
+  logger.log(`📁 Serving frontend from: ${frontendPath}`, 'Bootstrap');
+  
+  // SPA fallback - serve index.html for non-API routes
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.get('*', (req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith('/api/') || req.path.startsWith('/api/docs')) {
+      return next();
+    }
+    // Serve index.html for all other routes
+    res.sendFile(join(frontendPath, 'index.html'));
+  });
+  
   // Graceful shutdown
   app.enableShutdownHooks();
 

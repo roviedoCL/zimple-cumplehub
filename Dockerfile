@@ -27,7 +27,7 @@ COPY --from=backend-build /app/backend/dist ./backend/dist
 COPY --from=backend-build /app/backend/node_modules ./backend/node_modules
 COPY --from=backend-build /app/backend/package*.json ./backend/
 
-# Copiar frontend estático
+# Copiar frontend estático a la ubicación correcta (al mismo nivel que backend)
 COPY --from=frontend-build /app/frontend/dist ./frontend/dist
 
 # Variables de entorno
