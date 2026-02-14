@@ -127,6 +127,7 @@ async function bootstrap() {
   const nodeEnv = configService.get<string>('NODE_ENV', 'development');
 
   // Listen on 0.0.0.0 to accept connections from outside the container (required for Fly.io, Railway, etc.)
+  // IMPORTANT: Must listen on 0.0.0.0, not localhost/127.0.0.1
   await app.listen(port, '0.0.0.0');
 
   logger.log(

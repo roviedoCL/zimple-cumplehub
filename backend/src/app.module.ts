@@ -7,6 +7,7 @@ import { CoreModule } from './core/core.module';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { IdentityModule } from './modules/identity/identity.module';
 import { TenantModule } from './modules/tenant/tenant.module';
+import { HealthModule } from './modules/health/health.module';
 // import { ComplianceModule } from './modules/compliance/compliance.module';
 // import { SurveyModule } from './modules/survey/survey.module';
 // import { AnalyticsModule } from './modules/analytics/analytics.module';
@@ -49,6 +50,7 @@ import jwtConfig from './infrastructure/config/jwt.config';
     InfrastructureModule,
 
     // Domain modules
+    HealthModule,
     IdentityModule,
     TenantModule,
     // ComplianceModule,

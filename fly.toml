@@ -1,26 +1,31 @@
-app = "zimple-cumplehub"
-primary_region = "iad"
+# fly.toml app configuration file generated for zimple-cumplehub-frosty-frost-1528 on 2026-02-14T10:49:31-05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'zimple-cumplehub-frosty-frost-1528'
+primary_region = 'iad'
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = 'Dockerfile'
 
 [env]
-  NODE_ENV = "production"
-  PORT = "3000"
+  NODE_ENV = 'production'
+  PORT = '3000'
+
+[[mounts]]
+  source = 'postgres_data'
+  destination = '/var/lib/postgresql/data'
 
 [http_service]
   internal_port = 3000
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
-  processes = ["app"]
+  processes = ['app']
 
 [[vm]]
-  cpu_kind = "shared"
+  memory = '512mb'
   cpus = 1
   memory_mb = 512
-
-[mounts]
-  source = "postgres_data"
-  destination = "/var/lib/postgresql/data"

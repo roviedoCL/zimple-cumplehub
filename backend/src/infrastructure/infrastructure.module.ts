@@ -10,26 +10,52 @@ import { TenantAwareDataSource } from './database/tenant-aware.datasource';
   imports: [
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST', 'localhost'),
-        port: configService.get('DB_PORT', 5432),
-        username: configService.get('DB_USERNAME', 'postgres'),
-        password: configService.get('DB_PASSWORD', 'postgres'),
-        database: configService.get('DB_NAME', 'cumplehub'),
-        schema: 'shared',
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: configService.get('NODE_ENV') === 'development',
-        logging: configService.get('NODE_ENV') === 'development',
-        ssl: configService.get('DB_SSL') === 'true' ? {
-          rejectUnauthorized: false,
-        } : false,
-        extra: {
-          max: 20,
-          idleTimeoutMillis: 30000,
-          connectionTimeoutMillis: 2000,
-        },
-      }),
+      useFactory: (configService: ConfigService) => {
+        // Soporte para DATABASE_URL (Render, Railway, Supabase) o variables individuales
+        const databaseUrl = configService.get('DATABASE_URL');
+        
+        if (databaseUrl) {
+          // Usar DATABASE_URL directamente
+          return {
+            type: 'postgres',
+            url: databaseUrl,
+            schema: 'shared',
+            entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+            synchronize: configService.get('NODE_ENV') === 'development',
+            logging: configService.get('NODE_ENV') === 'development',
+            ssl: configService.get('NODE_ENV') === 'production' ? {
+              rejectUnauthorized: false,
+            } : false,
+            extra: {
+              max: 20,
+              idleTimeoutMillis: 30000,
+              connectionTimeoutMillis: 2000,
+            },
+          };
+        }
+        
+        // Fallback a variables individuales (desarrollo local)
+        return {
+          type: 'postgres',
+          host: configService.get('DB_HOST', 'localhost'),
+          port: configService.get('DB_PORT', 5432),
+          username: configService.get('DB_USERNAME', 'postgres'),
+          password: configService.get('DB_PASSWORD', 'postgres'),
+          database: configService.get('DB_NAME', 'cumplehub'),
+          schema: 'shared',
+          entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+          synchronize: configService.get('NODE_ENV') === 'development',
+          logging: configService.get('NODE_ENV') === 'development',
+          ssl: configService.get('DB_SSL') === 'true' ? {
+            rejectUnauthorized: false,
+          } : false,
+          extra: {
+            max: 20,
+            idleTimeoutMillis: 30000,
+            connectionTimeoutMillis: 2000,
+          },
+        };
+      },
       inject: [ConfigService],
     }),
     LoggerModule,

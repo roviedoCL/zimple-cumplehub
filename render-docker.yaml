@@ -1,11 +1,8 @@
 services:
-  # Aplicación completa (Frontend + Backend) usando Docker
   - type: web
     name: zimple-cumplehub-app
     runtime: docker
     dockerfilePath: ./Dockerfile
-    dockerContext: .
-    plan: free
     envVars:
       - key: NODE_ENV
         value: production
@@ -19,7 +16,16 @@ services:
         generateValue: true
       - key: ENCRYPTION_KEY
         value: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-    healthCheckPath: /api/health
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: zimple-cumplehub-redis
+          property: connectionString
+    healthCheckPath: /api/v1/health
+
+  - type: redis
+    name: zimple-cumplehub-redis
+    ipAllowList: []
 
 databases:
   - name: zimple-cumplehub-db
