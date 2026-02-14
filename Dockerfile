@@ -31,6 +31,10 @@ COPY --from=backend-build /app/backend/package*.json ./backend/
 # Copiar frontend estático a la ubicación correcta (al mismo nivel que backend)
 COPY --from=frontend-build /app/frontend/dist ./frontend/dist
 
+# Copiar script de inicio
+COPY start.sh ./start.sh
+RUN chmod +x ./start.sh
+
 # Variables de entorno
 ENV NODE_ENV=production
 ENV PORT=3000
@@ -39,4 +43,5 @@ ENV ENCRYPTION_KEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc
 
 EXPOSE 3000
 
-CMD ["node", "backend/dist/main.js"]
+# Usar el script de inicio
+CMD ["./start.sh"]
