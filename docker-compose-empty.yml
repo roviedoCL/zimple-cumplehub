@@ -1,0 +1,3 @@
+# Este archivo reemplaza a docker-compose.yml para evitar conflictos con Railway
+# El contenido original se encuentra en docker-compose.yml.backup
+# Para desarrollo local, restaura el archivo original
