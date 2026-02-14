@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, IsNull } from 'typeorm';
 import { Complaint, ComplaintStatus, ComplaintChannel, ComplainantType } from '../domain/complaint.entity';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
 import { UpdateComplaintDto } from './dto/update-complaint.dto';
@@ -67,7 +67,7 @@ export class ComplaintService {
 
   async findOne(id: string, tenantId: string): Promise<Complaint> {
     const complaint = await this.complaintRepository.findOne({
-      where: { id, tenantId, deletedAt: null },
+      where: { id, tenantId, deletedAt: IsNull() },
       relations: ['investigations', 'attachments'],
     });
 
@@ -80,7 +80,7 @@ export class ComplaintService {
 
   async findByCaseNumber(caseNumber: string, tenantId: string): Promise<Complaint> {
     const complaint = await this.complaintRepository.findOne({
-      where: { caseNumber, tenantId, deletedAt: null },
+      where: { caseNumber, tenantId, deletedAt: IsNull() },
       relations: ['investigations', 'attachments'],
     });
 
@@ -93,7 +93,7 @@ export class ComplaintService {
 
   async findByAccessToken(accessToken: string): Promise<Complaint> {
     const complaint = await this.complaintRepository.findOne({
-      where: { accessToken, deletedAt: null },
+      where: { accessToken, deletedAt: IsNull() },
     });
 
     if (!complaint) {
@@ -166,7 +166,7 @@ export class ComplaintService {
     avgResolutionDays: number;
   }> {
     const complaints = await this.complaintRepository.find({
-      where: { tenantId, deletedAt: null },
+      where: { tenantId, deletedAt: IsNull() },
     });
 
     const stats = {

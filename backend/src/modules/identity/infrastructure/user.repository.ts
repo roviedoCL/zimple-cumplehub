@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, DataSource } from 'typeorm';
+import { Repository, DataSource, IsNull } from 'typeorm';
 import { User, UserStatus } from '../domain/user.entity';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class UserRepository extends Repository<User> {
       where: {
         tenantId,
         status: UserStatus.ACTIVE,
-        deletedAt: null,
+        deletedAt: IsNull(),
       },
       relations: ['roles', 'roles.permissions'],
     });
@@ -21,14 +21,14 @@ export class UserRepository extends Repository<User> {
 
   async findByEmailWithRoles(email: string, tenantId: string): Promise<User | null> {
     return this.findOne({
-      where: { email, tenantId, deletedAt: null },
+      where: { email, tenantId, deletedAt: IsNull() },
       relations: ['roles', 'roles.permissions'],
     });
   }
 
   async existsByEmail(email: string, tenantId: string): Promise<boolean> {
     const count = await this.count({
-      where: { email, tenantId, deletedAt: null },
+      where: { email, tenantId, deletedAt: IsNull() },
     });
     return count > 0;
   }

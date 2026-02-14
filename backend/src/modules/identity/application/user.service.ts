@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, IsNull } from 'typeorm';
 import { User, UserStatus } from '../domain/user.entity';
 import { Role } from '../domain/role.entity';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -58,14 +58,14 @@ export class UserService {
 
   async findAll(tenantId: string): Promise<User[]> {
     return this.userRepository.find({
-      where: { tenantId, deletedAt: null },
+      where: { tenantId, deletedAt: IsNull() },
       relations: ['roles', 'roles.permissions'],
     });
   }
 
   async findOne(id: string, tenantId: string): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: { id, tenantId, deletedAt: null },
+      where: { id, tenantId, deletedAt: IsNull() },
       relations: ['roles', 'roles.permissions'],
     });
 
@@ -78,7 +78,7 @@ export class UserService {
 
   async findByEmail(email: string, tenantId: string): Promise<User | null> {
     return this.userRepository.findOne({
-      where: { email, tenantId, deletedAt: null },
+      where: { email, tenantId, deletedAt: IsNull() },
       relations: ['roles', 'roles.permissions'],
     });
   }
