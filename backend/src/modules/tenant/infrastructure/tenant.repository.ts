@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, DataSource } from 'typeorm';
-import { Tenant } from '../domain/tenant.entity';
+import { Repository, DataSource, IsNull } from 'typeorm';
+import { Tenant, TenantStatus } from '../domain/tenant.entity';
 
 @Injectable()
 export class TenantRepository extends Repository<Tenant> {
@@ -11,8 +11,8 @@ export class TenantRepository extends Repository<Tenant> {
   async findActiveTenants(): Promise<Tenant[]> {
     return this.find({
       where: {
-        status: 'active',
-        deletedAt: null,
+        status: TenantStatus.ACTIVE,
+        deletedAt: IsNull(),
       },
       relations: ['plan'],
     });
@@ -20,13 +20,13 @@ export class TenantRepository extends Repository<Tenant> {
 
   async findByRut(rut: string): Promise<Tenant | null> {
     return this.findOne({
-      where: { rut, deletedAt: null },
+      where: { rut, deletedAt: IsNull() },
     });
   }
 
   async existsBySubdomain(subdomain: string): Promise<boolean> {
     const count = await this.count({
-      where: { subdomain, deletedAt: null },
+      where: { subdomain, deletedAt: IsNull() },
     });
     return count > 0;
   }
