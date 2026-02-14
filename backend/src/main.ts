@@ -126,14 +126,15 @@ async function bootstrap() {
   const port = configService.get<number>('PORT', 3000);
   const nodeEnv = configService.get<string>('NODE_ENV', 'development');
 
-  await app.listen(port);
+  // Listen on 0.0.0.0 to accept connections from outside the container (required for Fly.io, Railway, etc.)
+  await app.listen(port, '0.0.0.0');
 
   logger.log(
-    `🚀 Zimple CumpleHub API is running on: http://localhost:${port}`,
+    `🚀 Zimple CumpleHub API is running on: http://0.0.0.0:${port}`,
     'Bootstrap',
   );
   logger.log(
-    `📚 Swagger documentation available at: http://localhost:${port}/api/docs`,
+    `📚 Swagger documentation available at: http://0.0.0.0:${port}/api/docs`,
     'Bootstrap',
   );
   logger.log(`🔧 Environment: ${nodeEnv}`, 'Bootstrap');
