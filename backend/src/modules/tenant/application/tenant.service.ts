@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, ConflictException } from '@nestjs/common
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Tenant, TenantStatus } from '../domain/tenant.entity';
-import { TenantPlan } from '../domain/tenant-plan.entity';
+import { TenantPlan, PlanType } from '../domain/tenant-plan.entity';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
 
@@ -34,7 +34,7 @@ export class TenantService {
 
     // Get default plan
     const defaultPlan = await this.planRepository.findOne({
-      where: { type: 'basic', isActive: true },
+      where: { type: PlanType.BASIC, isActive: true },
     });
     if (!defaultPlan) {
       throw new NotFoundException('Default plan not found');
