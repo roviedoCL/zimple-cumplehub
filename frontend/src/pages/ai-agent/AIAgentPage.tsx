@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
 import { 
   Bot, 
   Send, 
@@ -10,7 +9,6 @@ import {
   Loader2,
   Paperclip,
   Mic,
-  History,
   Trash2,
   ChevronDown,
   ChevronUp
