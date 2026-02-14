@@ -103,7 +103,8 @@ async function bootstrap() {
   });
 
   // Serve static files (frontend)
-  const frontendPath = join(__dirname, '..', 'frontend', 'dist');
+  // __dirname is /app/backend/dist, so we need to go up 2 levels to reach /app
+  const frontendPath = join(__dirname, '..', '..', 'frontend', 'dist');
   app.useStaticAssets(frontendPath);
   
   logger.log(`📁 Serving frontend from: ${frontendPath}`, 'Bootstrap');
