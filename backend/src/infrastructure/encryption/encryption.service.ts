@@ -1,5 +1,4 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, Logger } from '@nestjs/common';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -10,16 +9,26 @@ export class EncryptionService {
   private readonly authTagLength = 16;
   private readonly saltLength = 64;
   private readonly masterKey: Buffer;
+  private readonly logger = new Logger(EncryptionService.name);
 
-  constructor(private readonly configService: ConfigService) {
-    const encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
+  constructor() {
+    // Use process.env directly to ensure environment variables are accessible
+    const encryptionKey = process.env.ENCRYPTION_KEY;
+    
+    this.logger.debug(`ENCRYPTION_KEY exists: ${!!encryptionKey}`);
+    this.logger.debug(`ENCRYPTION_KEY length: ${encryptionKey?.length || 0}`);
+    
     if (!encryptionKey) {
       throw new Error('ENCRYPTION_KEY environment variable is required');
     }
+    
     this.masterKey = Buffer.from(encryptionKey, 'hex');
+    
     if (this.masterKey.length !== this.keyLength) {
-      throw new Error(`Encryption key must be ${this.keyLength} bytes (64 hex characters)`);
+      throw new Error(`Encryption key must be ${this.keyLength} bytes (64 hex characters), but got ${this.masterKey.length} bytes`);
     }
+    
+    this.logger.log('EncryptionService initialized successfully');
   }
 
   /**
