@@ -122,4 +122,4 @@ async function bootstrap() {
 bootstrap().catch((error) => {
   console.error('Failed to start application:', error);
   process.exit(1);
-});
+});// Force rebuild Sat Feb 14 00:27:13 EST 2026
