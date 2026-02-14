@@ -1,5 +1,5 @@
 import { Injectable, Scope } from '@nestjs/common';
-import { DataSource, EntityManager, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository, ObjectLiteral } from 'typeorm';
 import { AsyncLocalStorage } from 'async_hooks';
 
 interface TenantContext {
@@ -35,7 +35,7 @@ export class TenantAwareDataSource {
     return queryRunner.manager;
   }
 
-  getRepository<T>(entity: new () => T): Repository<T> {
+  getRepository<T extends ObjectLiteral>(entity: new () => T): Repository<T> {
     const manager = this.getManager();
     return manager.getRepository(entity);
   }

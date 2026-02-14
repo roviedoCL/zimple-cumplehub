@@ -1,16 +1,15 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { BullModule } from '@nestjs/bullmq';
 
 import { CoreModule } from './core/core.module';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { IdentityModule } from './modules/identity/identity.module';
 import { TenantModule } from './modules/tenant/tenant.module';
-import { ComplianceModule } from './modules/compliance/compliance.module';
-import { SurveyModule } from './modules/survey/survey.module';
-import { AnalyticsModule } from './modules/analytics/analytics.module';
+// import { ComplianceModule } from './modules/compliance/compliance.module';
+// import { SurveyModule } from './modules/survey/survey.module';
+// import { AnalyticsModule } from './modules/analytics/analytics.module';
 
 import appConfig from './infrastructure/config/app.config';
 import databaseConfig from './infrastructure/config/database.config';
@@ -45,28 +44,6 @@ import jwtConfig from './infrastructure/config/jwt.config';
       },
     ]),
 
-    // Queue system
-    BullModule.forRootAsync({
-      useFactory: (configService: ConfigService) => ({
-        connection: {
-          host: configService.get('REDIS_HOST', 'localhost'),
-          port: configService.get('REDIS_PORT', 6379),
-          password: configService.get('REDIS_PASSWORD'),
-          db: configService.get('REDIS_DB', 0),
-        },
-        defaultJobOptions: {
-          removeOnComplete: 100,
-          removeOnFail: 50,
-          attempts: 3,
-          backoff: {
-            type: 'exponential',
-            delay: 1000,
-          },
-        },
-      }),
-      inject: [ConfigService],
-    }),
-
     // Core modules
     CoreModule,
     InfrastructureModule,
@@ -74,9 +51,9 @@ import jwtConfig from './infrastructure/config/jwt.config';
     // Domain modules
     IdentityModule,
     TenantModule,
-    ComplianceModule,
-    SurveyModule,
-    AnalyticsModule,
+    // ComplianceModule,
+    // SurveyModule,
+    // AnalyticsModule,
   ],
 })
 export class AppModule {}
