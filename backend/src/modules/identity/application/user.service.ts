@@ -125,7 +125,7 @@ export class UserService {
       lastLoginAt: new Date(),
       lastLoginIp: ip,
       failedLoginAttempts: 0,
-      lockedUntil: null,
+      lockedUntil: () => 'NULL',
     });
   }
 
