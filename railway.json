@@ -3,10 +3,5 @@
   "build": {
     "builder": "DOCKERFILE",
     "dockerfilePath": "Dockerfile"
-  },
-  "deploy": {
-    "startCommand": "sh -c 'node backend/dist/main.js'",
-    "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
   }
 }
